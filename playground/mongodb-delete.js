@@ -73,7 +73,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
         
 
 
-    //this line closes the connection to the database
+    //this line closes the connection to the database. We comment it out because it would close the connection to the database before we complete our asnychronous calls.
     //notice that we have to close the application by pressing ctrl + c if we do not actively use client.close() at the end of the node application.
     //client.close();
 });

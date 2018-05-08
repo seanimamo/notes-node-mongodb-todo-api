@@ -32,7 +32,62 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
     //initializing the db variable to point to the collection we want 
     const db = client.db('TodoApp');
 
+    //.find() example of how to find ALL documents within your collection. This method returns a list of pointers (aka cursors) to the documents.
+    // We use .toArray() to turn the pointers returned by .find() to turn the pointers into objects within an array. .toArray() returns a promise
+    //**note that we can use a normal callback instead of a .then() promise style for these methods.
+    db.collection('Todos').find().toArray().then((result)=>{
+        console.log('----------------------------------');
+        console.log('Example of finding all Todos: ');
+        console.log(JSON.stringify(result, undefined, 2));
+        console.log('----------------------------------');
+    },(err)=>{
+        console.log('----------------------------------');
+        console.log(`something went wrong trying to find all documents within the Todos array ${err}`);
+        console.log('----------------------------------');
+    });
 
-    //this line closes the connection to the database
+    //example of using the .find() query to find documents with a specific attribute value. This method returns a list of pointers (aka cursors) to the documents.
+    // We use .toArray() to turn the pointers returned by .find() to turn the pointers into objects within an array. .toArray() returns a promise
+    db.collection('Todos').find({completed: false}).toArray().then((result)=>{
+        console.log('----------------------------------');
+        console.log('Example of finding all Todos with the completed value equal to false: ');
+        console.log(JSON.stringify(result, undefined, 2));
+        console.log('----------------------------------');
+    },(err)=>{
+        console.log('----------------------------------');
+        console.log(`something went wrong trying to find all documents within the Todos array ${err}`);
+        console.log('----------------------------------');
+    });
+
+    // example of using the .find() query to find documents with a specific _id attribute value. This method returns a list of pointers (aka cursors) to the documents.
+    // We use .toArray() to turn the pointers returned by .find() to turn the pointers into objects within an array. .toArray() returns a promise
+    // Notice that we cannot simply refernce the objectID as a string. This is because the value stored within the _id attribute is NOT a string. the _id attribute value is an object
+    // Therefore, inorder to find an object by its object value you have to use the template _id: new ObjectID('theObjectIDYou'reLookingFor');
+    db.collection('Todos').find({_id: new ObjectID('5af20354af81ba73e84d69c9')}).toArray().then((result)=>{
+        console.log('----------------------------------');
+        console.log('Example of finding all Todos with the the object id value equal to false: ');
+        console.log(JSON.stringify(result, undefined, 2));
+        console.log('----------------------------------');
+    },(err)=>{
+        console.log('----------------------------------');
+        console.log(`something went wrong trying to find all documents within the Todos array ${err}`);
+        console.log('----------------------------------');
+    });
+
+    // example of using the .find() query to find documents with a specific _id attribute value. This method returns a list of pointers (aka cursors) to the documents.
+    // We use .count() to return the number of all documents found. This method uses a callback function OR a promise .then() statement.
+    db.collection('Todos').find().count().then((result)=>{
+        console.log('----------------------------------');
+        console.log('Example of finding the count of all the documents within the Todo collection: ');
+        console.log(`Count of all the todos: ${result}`);
+        console.log('----------------------------------');
+    },(err)=>{
+        console.log('----------------------------------');
+        console.log(`something went wrong trying to find the count of all the documents within the Todo collection ${err}`);
+        console.log('----------------------------------');
+    });
+
+    
+    //this line closes the connection to the database. We comment it out because it would close the connection to the database before we complete our asnychronous calls.
     //client.close();
 });
