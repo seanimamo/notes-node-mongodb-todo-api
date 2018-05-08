@@ -35,7 +35,6 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
     // example of inserting a 'Todo' document (record) into the Todo collection
     // note that althought an _id attribute is automatically created, we can overwrite this value if we want when inserting an object
     // result.ops is an object containing all documents that were inserted
-    
     db.collection('Todos').insertOne({
         text:'Something to do',
         completed:false
