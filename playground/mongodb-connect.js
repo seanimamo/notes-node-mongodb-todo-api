@@ -11,13 +11,13 @@ const {MongoClient, ObjectID} = require('mongodb');
 // this will print out a unique mongo style string id that can serve as an ID for something we want.
 var obj = new ObjectID();
 console.log(`Example of using the ObjectID() function to create a unique mongo style string id: ${obj}`);
-
+console.log('--------------------------------------------------------');
 // This is an example of an es6 feature called object destructing. It lets you create a variable that pulls an attribute from an object
 // in this example, the name attribute of the user object is pulled(aka destructured) and created into another variable called name.
 var user = {name:'sean', age:'22'};
 var {name, age} = user; 
 console.log(`example of using ES6 object destructuring to create the name and age variables by pulling attributes from the user object: name: ${name}, age: ${age}`) //this prints 'sean'
-
+console.log('--------------------------------------------------------');
 // This is what is used to connect to a partiuclar mongoDB. In a real production environment this url would point to something like an AWS link or a heroku app
 // It takes two arguements, the database URL followed by the name of the database you want to connect to. (Note that in this case, TodoApp did not exist, but
 // mongodb automatically creates this database in the event that it does not exist).
@@ -34,32 +34,37 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
 
     // example of inserting a 'Todo' document (record) into the Todo collection
     // note that althought an _id attribute is automatically created, we can overwrite this value if we want when inserting an object
-    //result.ops is an object containing all documents that were inserted
-    // db.collection('Todos').insertOne({
-    //     text:'Something to do',
-    //     completed:false
-    // }, (err,result) =>{
-    //     if(err) {
-    //         return('Unable to insert into the Todo collection: ', err);
-    //     }
-
-    //     console.log(JSON.stringify(result.ops,undefined, 2));
-    // });
+    // result.ops is an object containing all documents that were inserted
+    
+    db.collection('Todos').insertOne({
+        text:'Something to do',
+        completed:false
+    }, (err,result) =>{
+        if(err) {
+            return('Unable to insert into the Todo collection: ', err);
+        }
+        console.log('example of inserting a document (record) into the Todo collection: ');
+        console.log("successfully inserted document into the Todo collection");
+        console.log(JSON.stringify(result.ops,undefined, 2));
+        console.log('--------------------------------------------------------');
+    });
 
     // example insert a new document(record) into the User collection
     // The object _id attribute has the timestamp for when it was inserted contained within its first 12 bytes
     // by calling the .getTimestamp() method on a particular documents _id, (in this case we only insert one so we refernce it by result.ops[0]._id), we call .getTimestamp() on it to get the time and date it was created/inserted
-    // db.collection('Users').insertOne({
-    //     name:'Sean Imam',
-    //     age:'22',
-    //     location: 'Maryland, USA'
-    // },(err,result)=>{
-    //     if(err) {
-    //         return('Unable to insert document into the User collection: ', err);
-    //     }
-    //     console.log(JSON.stringify(result.ops,undefined, 2));
-    //     console.log(`This Document was inserted into Users collection at: ${result.ops[0]._id.getTimestamp()}`);
-    // });
+    db.collection('Users').insertOne({
+        name:'Sean Imam',
+        age:'22',
+        location: 'Maryland, USA'
+    },(err,result)=>{
+        if(err) {
+            return('Unable to insert document into the User collection: ', err);
+        }
+        console.log('example of inserting a document (record) into the Users collection, showing how to get the timestamp from when it was inserted by using getTimestamp() on the object _id attribute and then closing the connection to the database: ');
+        console.log(`This Document was inserted into Users collection at: ${result.ops[0]._id.getTimestamp()}`);
+        console.log(JSON.stringify(result.ops,undefined, 2));
+        console.log('--------------------------------------------------------');
+    });
 
     //this line closes the connection to the database
     client.close();
