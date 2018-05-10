@@ -29,14 +29,14 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
     }
     console.log('Connected to the MongoDB server');
     
-    //initializing the db variable to point to the collection we want 
+    //initializing the db variable to point to the collection we want (syntax used in mongodb v3+)
     const db = client.db('TodoApp');
 
     // example of inserting a 'Todo' document (record) into the Todo collection
     // note that althought an _id attribute is automatically created, we can overwrite this value if we want when inserting an object
     // result.ops is an object containing all documents that were inserted
     db.collection('Todos').insertOne({
-        text:'Something to do',
+        text:'Walk the dog',
         completed:false
     }, (err,result) =>{
         if(err) {
@@ -52,7 +52,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err,client)=>{
     // The object _id attribute has the timestamp for when it was inserted contained within its first 12 bytes
     // by calling the .getTimestamp() method on a particular documents _id, (in this case we only insert one so we refernce it by result.ops[0]._id), we call .getTimestamp() on it to get the time and date it was created/inserted
     db.collection('Users').insertOne({
-        name:'Sean Imam',
+        name:'John',
         age:'22',
         location: 'Maryland, USA'
     },(err,result)=>{
