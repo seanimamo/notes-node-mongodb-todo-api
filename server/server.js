@@ -7,6 +7,11 @@ var app = express();
 //this variable does not exist on local machines however, so we make this default to 3000 in the case that process.env.PORT does not exist
 const port = process.env.PORT || 3000;
 
+//note this is ES6 syntax for var mongoose =  require('./db/mongoose.js').mongoose;
+var {mongoose} = require('./db/mongoose.js');
+var {Todo} = require('./models/todo.js');
+var {User} = require('./models/user.js');
+
 app.listen(port, () =>{
     console.log(`started on port ${port}`);
 });
@@ -29,12 +34,21 @@ app.post('/todos', (req,res)=> {
    // console.log(req.body);
 });
 
+app.get('/todos',(req,res)=>{
+    //this is how we find all documents in a collection using mongoose
+    Todo.find().then((todos)=>{
+        //note that it is better to send objects, not arrays, so that we can add attributes if we need to.
+        res.send({
+            todos,
+            customCode:'Succesfully fetched all todos from database.'
+        });
+    }).catch((error)=>{
+        res.status(400).send(error);
+    });
+
+});
 
 
-//note this is ES6 syntax for var mongoose =  require('./db/mongoose.js').mongoose;
-var {mongoose} = require('./db/mongoose.js');
-var {Todo} = require('./models/todo.js');
-var {User} = require('./models/user.js');
 
 // // Before we can add a Todo document to the collection, we have to create a new instance of a Todo mongoose model object
 // // once we create the model, we can then run database functions on it.
