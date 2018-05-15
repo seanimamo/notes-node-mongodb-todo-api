@@ -11,10 +11,7 @@ const port = process.env.PORT || 3000;
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
-
-app.listen(port, () =>{
-    console.log(`started on port ${port}`);
-});
+var {ObjectId} = require('mongodb');
 
 app.use(bodyParser.json());
 
@@ -34,6 +31,7 @@ app.post('/todos', (req,res)=> {
    // console.log(req.body);
 });
 
+//example of our database API for fetching all todos
 app.get('/todos',(req,res)=>{
     //this is how we find all documents in a collection using mongoose
     Todo.find().then((todos)=>{
@@ -48,7 +46,29 @@ app.get('/todos',(req,res)=>{
 
 });
 
+//this is an example that pulls a variable from the url to act upon
+//in this case, we have a specific object id to look for, we pull it off the url using req.params.id.
+app.get('/todos/:id',(req,res)=>{
+    var todoId = req.params.id;
+    if(!ObjectId.isValid(todoId)){
+        res.status(404).send(`ERROR 404: ${todoId} is not a valid id`);
+    }
 
+    Todo.findById(todoId).then((todo)=>{
+        if(!todo){
+            return res.status(404).send(`No todos by that Id found!`);
+        }
+        res.send({todo});
+    }).catch((e)=>{
+        console.log(e);
+        res.status(400).send();
+    });
+
+});
+
+app.listen(port, () =>{
+    console.log(`started on port ${port}`);
+});
 
 // // Before we can add a Todo document to the collection, we have to create a new instance of a Todo mongoose model object
 // // once we create the model, we can then run database functions on it.
